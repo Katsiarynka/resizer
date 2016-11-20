@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'djcelery',
+    'rest_framework',
 
     'images',
 ]
@@ -38,21 +39,18 @@ MIDDLEWARE_CLASSES = [
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_RENDERER_CLASSES': ('rest_framework.renderers.JSONRenderer', ),
     'DEFAULT_AUTHENTICATION_CLASSES': [],
     'UNAUTHENTICATED_USER': None,
     'UNAUTHENTICATED_TOKEN': None,
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser',
+    ],
 }
 
 REDIS_SERVICE = 'redis://127.0.0.1:6379'
 CELERY_RESULT_BACKEND = REDIS_SERVICE + '/0'
-CELERY_QUEUES = (
-    Queue('normal', Exchange('normal'), routing_key='normal'),
-)
-
-CELERY_ROUTES = {
-    'resize_image': {'queue': 'normal'},
-}
 
 
 ROOT_URLCONF = 'resizer.urls'
@@ -60,7 +58,7 @@ ROOT_URLCONF = 'resizer.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
+        'DIRS': [os.path.join(BASE_DIR, 'media')]
         ,
         'APP_DIRS': True,
         'OPTIONS': {
@@ -109,6 +107,16 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
+# Absolute filesystem path to the directory that will hold user-uploaded files.
+# Example: "/home/media/media.lawrence.com/media/"
+MEDIA_ROOT = os.path.abspath(os.path.join(PROJECT_PATH, '..')) + '/media/'
+
+# URL that handles the media served from MEDIA_ROOT. Make sure to use a
+# trailing slash.
+# Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
+MEDIA_URL = '/media/'
+
 
 try:
     from local_settings import *

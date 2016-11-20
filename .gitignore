@@ -35,7 +35,8 @@ var/
 #SQLite database
 *.sqlite3
 
-templates/images/*
+media/images/original/*
+media/images/converted/*
 
 # Installer logs
 pip-log.txt

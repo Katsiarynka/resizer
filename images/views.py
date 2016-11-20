@@ -1,22 +1,24 @@
+from rest_framework.decorators import detail_route, parser_classes
 from rest_framework.exceptions import ValidationError
-from rest_framework.parsers import FileUploadParser
+from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin, ListModelMixin
+from rest_framework.parsers import FileUploadParser, FormParser, MultiPartParser
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
+from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
-from models import Image
-from resizer.celery import resize
+from models import Image, LOADED
+from .tasks import resize
+from .serializers import ImageSerializer
 
 
-class LoadImage(APIView):
-    parser_classes = (FileUploadParser,)
+class ImageViewSet(ModelViewSet):
+    queryset = Image.objects.all()
+    serializer_class = ImageSerializer
 
-    def put(self, request, filename):
-        original = request.data['file']
-        image = Image.objects.create(original=original)
-        job = resize.delay(image.id)
-        image.job_id = job.id
-        image.save(update_fields=['job_id'])
-        return Response({"id": image.id})
+    def perform_create(self, serializer):
+        serializer.save(original=self.request.FILES.get('original'))
 
 
 class GetResizedImage(APIView):
