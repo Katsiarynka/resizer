@@ -1,0 +1,13 @@
+1) Install dependencies
+
+If you want use virtualenv to create it:
+ virtualenv -p /usr/bin/python2.7 venv
+pip install -r requirements.txt
+
+2) install Redis
+sudo apt-get install redis-server
+
+3) run server
+python manage.py runserver
+python manage.py celery -A resizer worker -l info
+

@@ -1,0 +1,9 @@
+REST API server with two endpoints:
+
+◦ for sending image to service:
+    POST method on /api/images/ send a file in FILES parameter with name original
+
+
+◦ for getting converted image
+    GET request on /images/converted/<id>/
+    where <id> - id of image was loaded
