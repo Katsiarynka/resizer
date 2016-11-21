@@ -23,10 +23,9 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    'djcelery',
     'rest_framework',
-
+    'djcelery',
+    'ws4redis',
     'images',
 ]
 
@@ -58,7 +57,7 @@ ROOT_URLCONF = 'resizer.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'media')]
+        'DIRS': [os.path.join(BASE_DIR, 'templates')]
         ,
         'APP_DIRS': True,
         'OPTIONS': {
@@ -70,8 +69,6 @@ TEMPLATES = [
         },
     },
 ]
-
-WSGI_APPLICATION = 'resizer.wsgi.application'
 
 
 # Database
@@ -117,6 +114,15 @@ MEDIA_ROOT = os.path.abspath(os.path.join(PROJECT_PATH, '..')) + '/media/'
 # Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
 MEDIA_URL = '/media/'
 
+# URL that distinguishes websocket connections from normal requests
+WEBSOCKET_URL = '/ws/'
+
+# Set the number of seconds each message shall persited
+WS4REDIS_EXPIRE = 3600
+
+WS4REDIS_HEARTBEAT = ''
+
+WSGI_APPLICATION = 'ws4redis.django_runserver.application'
 
 try:
     from local_settings import *

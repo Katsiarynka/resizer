@@ -1,10 +1,10 @@
 from django.utils.timezone import now
-
-from resizer.celery import app
 from PIL import Image as PilImage
 
 from images.models import Image, FAILED, CONVERTED, DIR_CONVERTED
+from resizer.celery import app
 from resizer.settings import MEDIA_ROOT
+from resizer.utils import publish_in_ws
 
 WEIGHT = 2
 
@@ -20,6 +20,7 @@ def resize(image_id):
         image.converted_image = path
         image.converted_datetime = now()
         image.status = CONVERTED
+        publish_in_ws(image)
     except Exception as e:
         image.status = FAILED
         image.issues = str(e)
