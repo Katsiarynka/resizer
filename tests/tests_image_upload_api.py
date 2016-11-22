@@ -1,7 +1,5 @@
 # tests.py
 import os
-from urlparse import urlparse
-
 from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase, APIClient
@@ -10,7 +8,7 @@ from images.models import Image
 from resizer import settings
 
 
-class FileUploadTests(APITestCase):
+class ImageUploadAPI(APITestCase):
 
     def setUp(self):
         self.tearDown()
