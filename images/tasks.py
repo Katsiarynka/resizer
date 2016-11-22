@@ -13,9 +13,9 @@ WEIGHT = 2
 def resize(image_id):
     image = Image.objects.get(id=image_id)
     try:
-        original = PilImage.open(image.original)
+        original = PilImage.open(image.original_image)
         converted = original.resize([original.width/WEIGHT, original.height/WEIGHT])
-        path = MEDIA_ROOT + DIR_CONVERTED + '/' + image.original.name.split('/')[-1]
+        path = MEDIA_ROOT + DIR_CONVERTED + '/' + image.original_image.name.split('/')[-1]
         converted.save(path)
         image.converted_image = path
         image.converted_datetime = now()
